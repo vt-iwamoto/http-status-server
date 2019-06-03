@@ -1,17 +1,17 @@
-from flask import Flask, abort, redirect, url_for
+from flask import Flask, abort, redirect, request
 app = Flask(__name__)
 
-@app.route("/200")
-def ok():
-    return "OK"
-
-@app.route("/302")
-def found():
-    return redirect(url_for("ok"), code=302)
-
-@app.route("/500")
-def internal_server_error():
-    abort(500)
+@app.route("/")
+def index():
+    code = request.args.get("code")
+    if code == "200":
+        return "OK"
+    elif code == "302":
+        return redirect("/?code=200", code=302)
+    elif code == "500":
+        abort(500)
+    else:
+        abort(404)
 
 if __name__ == "__main__":
     app.run()
